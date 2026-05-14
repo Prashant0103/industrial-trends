@@ -3,6 +3,62 @@ name: get-trending-in-ai
 description: Discover, analyze, and summarize the latest AI/GenAI engineering updates — frameworks, libraries, architectures, tools, and research with practical production value. Use when a user asks for "latest AI updates", "what's new in GenAI", "AI radar", "trending AI tools", or "new AI frameworks" to get a deep technical report written from a senior GenAI engineer's perspective.
 ---
 
+# 🔍 Pre-Generation Deduplication Check (MANDATORY)
+
+**BEFORE starting any search, execute this check:**
+
+1. **Load discovery database** from `settings.json`
+2. **Check what's already discovered** in the database
+3. **Show user the existing discoveries** for their selected option
+4. **Ask: "Should I search for new discoveries, or would you like something different?"**
+5. **Prevent searching for known items** (unless major evolution detected)
+
+## Deduplication Workflow
+
+```
+User selects option (1-7)
+    ↓
+Load settings.json discovery database
+    ↓
+Query: "What discoveries exist in this category?"
+    ↓
+Display: "Found X existing discoveries: [list]"
+    ↓
+Prompt: "Search for NEW discoveries beyond these?"
+    ↓
+If YES → Search ONLY for items NOT in database
+If NO → Skip execution
+    ↓
+Generate focused report with NEW items only
+    ↓
+Update settings.json with new discoveries
+```
+
+## Discovery Check Examples
+
+**Option 1 (Frameworks):** Show existing framework discoveries
+```
+Found 2 framework discoveries in database:
+- LangGraph 1.2.0 (2026-05-12) ✓ Released
+- Microsoft Agent Framework 1.0 (2026-04-15) ✓ Released
+
+Search for NEW framework releases beyond these?
+```
+
+**Option 6 (Upcoming Releases):** Show existing roadmap items
+```
+Found 5 upcoming releases in database:
+- OpenAI Custom Silicon (Q2-Q4 2026)
+- Anthropic Claude 5 (Q2 2026)
+- Google Gemini XR (I/O 2026)
+- Mistral Reasoning Variant (Q3-Q4 2026)
+- LangGraph 2.0 (Q3 2026)
+
+Search for NEW upcoming announcements beyond these?
+```
+
+---
+
 # ⚡ FOCUSED EXECUTION MODE (CRITICAL)
 
 **Apply STRICT FOCUS to every execution:**
@@ -166,7 +222,46 @@ User Request → Detect Topic, Count, Time Range
 
 # 🚀 Interactive AI Engineering Discovery Menu
 
-When this skill is invoked, **FIRST display this interactive menu:**
+When this skill is invoked, **FIRST execute the deduplication check**, then **display this interactive menu:**
+
+## Deduplication Check Display
+
+Before showing options, show what's already discovered:
+
+```
+📊 Current Discovery Database Status
+
+✅ Already Discovered (11 items total):
+  
+  🔗 Frameworks (2 released):
+     • LangGraph 1.2.0 (2026-05-12)
+     • Microsoft Agent Framework v1.0 (2026-04-15)
+  
+  🧠 Models (1 released):
+     • Gemini 3.1 Ultra (2026-04-15) - 2M context window
+  
+  🤖 Agent Systems (1 released):
+     • Anthropic Project Deal (2026-04-25) - 186 autonomous transactions
+  
+  ⚙️ Infrastructure (2 released):
+     • OpenClaw (210K+ stars)
+     • MCP (97M installs)
+  
+  🚀 Upcoming Releases (5 planned):
+     • OpenAI Custom Silicon (Q2-Q4 2026)
+     • Claude 5 (Q2 2026)
+     • Gemini Enterprise + XR (I/O 2026)
+     • Mistral Reasoning (Q3-Q4 2026)
+     • LangGraph 2.0 (Q3 2026)
+
+---
+```
+
+Then display the menu below.
+
+---
+
+When this skill is invoked, **display this interactive menu:**
 
 ```
 # 🚀 AI Engineering Discovery Menu
@@ -415,6 +510,219 @@ After user selection, perform **ONLY the focused search** for that category:
 - Option 4 (GitHub Repos) should NOT include implementation patterns section
 
 Each option is self-contained. No cross-option sections unless specified above.
+
+---
+
+## Discovery Database Deduplication Rules
+
+**Before searching, ALWAYS query `settings.json`:**
+
+### Rule 1: Exact Match = SKIP
+If discovery ID already exists in database → DO NOT include again
+
+**Example:**
+```
+Search finds: "LangGraph 1.2.0"
+Database check: "id": "langgraph-1.2.0" already exists
+Action: SKIP this discovery, don't include in report
+```
+
+### Rule 2: Major Evolution = NEW ENTRY
+If framework exists BUT has major new feature/version → NEW ENTRY with `"major_evolution": true`
+
+**Example:**
+```
+Database has: "langgraph-1.2.0" (released)
+Search finds: "LangGraph 2.0 with distributed execution"
+Action: CREATE NEW ENTRY "langgraph-2.0-enterprise" (different from 1.2.0)
+Reason: Different version, different capabilities
+```
+
+### Rule 3: Minor Update = SKIP
+If framework exists AND only minor version bump → SKIP (not significant)
+
+**Example:**
+```
+Database has: "gemini-3.1-ultra" (released)
+Search finds: "Gemini 3.1 patch update"
+Action: SKIP, minor update not worth reporting
+```
+
+### Rule 4: Same Framework, New Capability = NEW ENTRY
+If framework exists BUT brand new major capability added → NEW ENTRY if significant
+
+**Example:**
+```
+Database has: "claude-opus-4.7" (model)
+Search finds: "Claude now supports 10M token context"
+Action: NEW ENTRY "claude-opus-10m-context" if this is a major shift
+Reason: New capability changes system architecture
+```
+
+### Rule 5: Framework Not in Database = NEW ENTRY
+Any discovery not matching existing ID → ADD NEW ENTRY
+
+**Example:**
+```
+Search finds: "New framework CoolAgents v1.0"
+Database check: No ID for "coolagents" exists
+Action: CREATE NEW ENTRY with id: "coolagents-1.0"
+```
+
+---
+
+## Database Query Workflow
+
+**Before EVERY report generation:**
+
+### Step 1: Load Database
+```
+Read: .claude/skills/get-trending-in-AI/settings.json
+Get: discovery_database.discoveries array
+```
+
+### Step 2: Filter by Option Category
+```
+Option 1 → Query: discoveries where category = "🔗 Framework & Library Releases"
+Option 2 → Query: discoveries where category = "🧠 Model & API Updates"
+Option 3 → Query: discoveries where "major_evolution" = true OR category = "🚨 High-Signal"
+Option 4 → Query: discoveries filtered by GitHub repos only
+Option 5 → Query: discoveries where status = "released" AND category = "🤖 Agent & Orchestration"
+Option 6 → Query: discoveries where status = "upcoming"
+```
+
+### Step 3: Display to User
+Show existing discoveries for their selected option with:
+- Title
+- Release/discovery date
+- Status (released, upcoming, beta)
+- Major evolution flag if applicable
+
+### Step 4: Search Guidance
+```
+Display to user:
+"Found X discoveries already in database for this category.
+Searching for NEW discoveries not in this list..."
+```
+
+### Step 5: During Search
+When finding new items:
+- Generate ID: `framework-name-version-or-date`
+- Check ID against database IDs
+- If ID exists → SKIP (already discovered)
+- If ID new → INCLUDE in report
+- Mark major evolutions with flag
+
+---
+
+## Post-Report: Update Database
+
+**After generating each report, ALWAYS update `settings.json`:**
+
+### Add New Discoveries
+```json
+{
+  "id": "new-framework-1.0",
+  "title": "New Framework 1.0",
+  "framework": "NewFramework",
+  "company": "Company",
+  "type": "Framework Release",
+  "release_date": "2026-05-XX",
+  "discovered_date": "2026-05-14",
+  "report_files": ["genai_trends_2026_05_14_v4.md"],
+  "category": "🔗 Framework & Library Releases",
+  "version": "1.0",
+  "tags": ["tag1", "tag2"],
+  "major_evolution": false,
+  "status": "released",
+  "key_features": ["feature1", "feature2"],
+  "notes": "Why this matters"
+}
+```
+
+### Update Search Index
+```json
+"by_framework": {
+  "NewFramework": ["new-framework-1.0"]  // Add new discovery ID
+},
+"by_category": {
+  "🔗 Framework & Library Releases": [..., "new-framework-1.0"]  // Add here
+},
+"by_status": {
+  "released": [..., "new-framework-1.0"]  // Add here
+}
+```
+
+### Update Metadata
+```json
+"metadata": {
+  "total_discoveries": 12,  // Increment
+  "last_updated": "2026-05-14T...",
+  "report_count": {
+    "genai_trends_2026_05_14_v4.md": X  // Add report
+  }
+}
+```
+
+---
+
+## Deduplication Examples
+
+### ✅ CORRECTLY SKIP
+```
+Database: "langgraph-1.2.0" exists (released 2026-05-12)
+Search: Finds "LangGraph 1.2.0"
+Action: SKIP (exact duplicate)
+Result: Not included in report
+```
+
+### ✅ CORRECTLY ADD AS NEW
+```
+Database: "langgraph-1.2.0" exists
+Search: Finds "LangGraph 2.0 with distributed execution"
+Action: ADD as new entry (different version, major features)
+Result: Included in report with "major_evolution": true
+```
+
+### ❌ WRONG - Would create duplicate
+```
+Database: "langgraph-1.2.0" exists
+Search: Finds "LangGraph 1.2.0 improvements"
+Action: SKIP (don't create "langgraph-1.2.0-v2" or similar)
+Result: Not included
+```
+
+### ❌ WRONG - Would miss evolution
+```
+Database: "claude-opus-4.7" exists
+Search: Finds "Claude now has reasoning mode"
+Action: DO ADD if this is major (don't skip just because "Claude" exists)
+Result: New entry "claude-opus-reasoning-mode" included
+Reason: Different capability, different ID
+```
+
+---
+
+## Database File Location
+
+**Path:** `.claude/skills/get-trending-in-AI/settings.json`
+
+**Usage in reports:**
+```
+Before executing skill:
+1. Read settings.json
+2. Check discovery_database.discoveries
+3. Filter by selected option category
+4. Show user what exists
+5. Search only for NEW items not in database
+6. After report, update settings.json
+```
+
+**Structure:**
+- `discovery_database` — All tracked discoveries with metadata
+- `tracking_rules` — How to avoid duplication
+- `search_index` — Quick lookup by framework/category/status
+- `metadata` — Summary stats and next priorities
 
 ---
 
