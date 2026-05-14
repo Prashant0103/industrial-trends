@@ -3,6 +3,421 @@ name: get-trending-in-ai
 description: Discover, analyze, and summarize the latest AI/GenAI engineering updates — frameworks, libraries, architectures, tools, and research with practical production value. Use when a user asks for "latest AI updates", "what's new in GenAI", "AI radar", "trending AI tools", or "new AI frameworks" to get a deep technical report written from a senior GenAI engineer's perspective.
 ---
 
+# ⚡ FOCUSED EXECUTION MODE (CRITICAL)
+
+**Apply STRICT FOCUS to every execution:**
+
+Only perform the exact task requested by the user.
+
+## Smart Query Understanding
+
+Detect from user input:
+- Requested topic/category
+- Requested count (top 3, top 5, etc.)
+- Requested time range (last 7 days, last 24 hours, today, etc.)
+
+**Examples:**
+- "top 3 frameworks from last 5 days" → frameworks ONLY, limit 3, last 5 days
+- "trending GitHub repos" → repositories ONLY, trending filter
+- "new AI models" → models ONLY, newly released
+- "latest RAG improvements" → RAG frameworks ONLY, recent updates
+
+## Execution Rules
+
+**RULE 1: Search ONLY for requested topic**
+- If user asks for frameworks → search ONLY frameworks
+- If user asks for repositories → search ONLY repositories
+- If user asks for models → search ONLY models
+- Do NOT include unrelated sections
+
+**RULE 2: Generate ONLY relevant output**
+- Include ONLY sections user requested
+- Skip summary tables if not requested
+- Skip trends if not requested
+- Skip GitHub repos if user asked for frameworks only
+
+**RULE 3: Apply count and time filters strictly**
+- "top 5" → exactly 5, not more
+- "last 7 days" → only items from last 7 days, exclude older
+- "today" → only today's announcements
+- "newly launched" → only newly released (not already known)
+
+**RULE 4: Code examples (CRITICAL FORMATTING)**
+- ALWAYS use triple backticks for code blocks: ```python (not backslashes)
+- Format MUST be: ```python followed by code, then closing ```
+- NEVER use backslashes, escape characters, or forward slashes to denote code blocks
+- Proper markdown code block structure:
+  * Opening: ``` followed by language name (python, bash, json, yaml)
+  * Content: Actual code with proper indentation
+  * Closing: ``` on its own line
+- Code must be syntactically correct and copy-paste ready
+- Proper indentation inside code blocks (spaces, not tabs)
+- Keep code examples focused on requested topic
+
+## Output Examples
+
+**User:** "top 3 new frameworks last 5 days"
+```
+GENERATE:
+- 3 framework updates (no more, no less)
+- Last 5 days only
+- simple easy to understand example for each
+- Predict the impact of each framework
+- Code examples for each
+
+SKIP:
+- GitHub repositories section
+- Technology trends section
+- Industry impact table (unless specifically relevant)
+- Strategic takeaways
+```
+
+**User:** "trending GitHub repositories May 2026"
+```
+GENERATE:
+- 5 trending repositories
+- GitHub stats and details
+- Why interesting + use cases
+- future impact analysis for each
+
+SKIP:
+- Framework updates section
+- Model releases
+- General news
+```
+
+**User:** "new RAG frameworks last week"
+```
+GENERATE:
+- RAG frameworks only (not LLMs, not general frameworks)
+- Last week only
+- Implementation code
+- Real use cases
+- Future impact analysis
+
+SKIP:
+- Non-RAG frameworks
+- Unrelated topics
+- Verbose sections
+```
+
+## Performance Mode
+
+Prioritize:
+- ✅ Fast execution (30-60 seconds)
+- ✅ Focused search (request-specific queries)
+- ✅ Concise output (no fluff)
+- ✅ High-signal discoveries (implementation-focused)
+- ✅ Minimal sections (only what was asked for)
+
+Avoid:
+- ❌ Unnecessary searches
+- ❌ Unrelated sections
+- ❌ Verbose descriptions
+- ❌ Generic summaries
+- ❌ Topics user didn't request
+
+## Code Block Generation (CRITICAL)
+
+**CORRECT Format:**
+```
+Opening: [three backticks]python
+Code here
+Closing: [three backticks]
+```
+
+**INCORRECT Formats (NEVER USE):**
+- \\\python ... \\\  (backslashes)
+- ///python ... ///  (forward slashes)
+- ~~~python ... ~~~  (tildes)
+- Escaped backticks: \`\`\`
+
+**Real Example - CORRECT:**
+
+The code block should look like this in the markdown file:
+```
+[three backticks]python
+from openai import OpenAI
+client = OpenAI()
+[three backticks]
+```
+
+This renders as a proper code block in markdown viewers.
+
+---
+
+## Decision Tree
+
+```
+User Request → Detect Topic, Count, Time Range
+                        ↓
+        Perform FOCUSED search for that topic ONLY
+                        ↓
+        Generate ONLY relevant sections
+                        ↓
+        Include code examples (proper markdown formatting)
+                        ↓
+        Skip all unrelated sections
+                        ↓
+        Return concise, focused report
+```
+
+---
+
+# 🚀 Interactive AI Engineering Discovery Menu
+
+When this skill is invoked, **FIRST display this interactive menu:**
+
+```
+# 🚀 AI Engineering Discovery Menu
+
+What would you like to explore today?
+
+1. 🧠 Newly Released AI Frameworks
+   • frameworks/tools launched in last 7 days
+   • new SDKs and orchestration systems
+   • RAG frameworks and agent frameworks
+
+2. 🤖 New AI Models & Research Breakthroughs
+   • newly released models
+   • reasoning improvements
+   • model architecture innovations
+
+3. 🚨 Industry-Changing AI Launches
+   • breakthroughs likely to influence the future of AI
+   • revolutionary product launches
+   • major AI infrastructure innovations
+
+4. 🔥 Trending GitHub AI Repositories
+   • newly trending repositories
+   • production-ready GenAI systems
+   • innovative AI engineering projects
+
+5. ⚡ Production-Ready GenAI Engineering Updates
+   • practical implementation ideas
+   • RAG improvements and memory systems
+   • AI agent architectures and scaling patterns
+
+6. 🔮 Future AI Trends & Upcoming Releases
+   • upcoming AI capabilities
+   • preview/beta systems
+   • roadmap announcements
+
+7. 🛠 Custom AI Discovery
+   • describe exactly what you want
+   • generate focused engineering intelligence report
+```
+
+## User Input Handling
+
+Accept user input in any of these formats:
+- **Option number:** `1`, `2`, `3`, `4`, `5`, `6`, `7`
+- **Option name:** `"new frameworks"`, `"trending repos"`, `"models"`, `"github"`, `"production updates"`, `"upcoming releases"`, `"custom"`
+- **Natural language:** `"show me new RAG frameworks"`, `"find trending repositories"`, `"what's new in AI models"`, etc.
+
+## Smart Execution Modes
+
+After user selection, perform **ONLY the focused search** for that category:
+
+**Mode 1: Newly Released AI Frameworks**
+- Search for: frameworks, SDKs, orchestration tools launched in last 7 days
+- Focus: LangChain updates, LangGraph releases, new agent frameworks, RAG systems, AutoGen, CrewAI, PydanticAI, etc.
+- Recency: Last 7 days only
+
+**Mode 2: New AI Models & Research Breakthroughs**
+- Search for: model releases, reasoning improvements, architecture innovations
+- Focus: OpenAI, Anthropic, Google DeepMind, Meta AI, Mistral, xAI releases
+- Topics: reasoning, multimodal, long-context, structured output improvements
+
+**Mode 3: Industry-Changing AI Launches**
+- Search for: paradigm-shifting breakthroughs, revolutionary products, major infrastructure innovations
+- Focus: High-impact launches that will shape the future of AI
+- Criteria: Breakthroughs with significant long-term industry implications
+
+**Mode 4: Trending GitHub AI Repositories**
+- Search for: trending AI repositories on GitHub
+- Focus: Production-ready systems, innovative architectures, actively maintained projects
+- Analysis: Top 5 repos with architecture insights and use cases
+
+**Mode 5: Production-Ready GenAI Engineering Updates**
+- Search for: practical implementation patterns, production improvements
+- Focus: RAG enhancements, memory systems, agent architectures, scaling solutions, reliability patterns
+- Scope: Real-world production deployment improvements
+
+**Mode 6: Future AI Trends & Upcoming Releases**
+- Search for: upcoming capabilities, preview systems, beta announcements
+- Focus: Roadmap reveals, preview releases, future architecture patterns
+- Scope: What's coming in the next 3-6 months
+
+**Mode 7: Custom AI Discovery**
+- Use: User's custom description to define the search
+- Scope: Focus discovery exactly as user specifies
+- Results: Tailored report based on custom requirements
+
+---
+
+## Per-Option Output Specification (STRICT)
+
+**CRITICAL: Each option generates ONLY its requested sections. Skip everything else.**
+
+### Option 1: Newly Released AI Frameworks
+
+**GENERATE:**
+- 🚨 High-Signal Framework Releases (if any paradigm-shifting)
+- 📋 Framework Update Reports (max 5 updates, 150 words each)
+- Implementation examples for each framework
+- Architecture impact analysis
+- Future adoption timeline
+
+**SKIP:**
+- ❌ GitHub repositories section
+- ❌ Technology trends section
+- ❌ Model releases section
+- ❌ Strategic takeaways (unless directly framework-related)
+- ❌ Industry impact table
+
+**Output structure:** Framework updates ONLY with code + future impact
+
+---
+
+### Option 2: New AI Models & Research Breakthroughs
+
+**GENERATE:**
+- 🚨 High-Signal Model Releases (paradigm-shifting models only)
+- 📋 Model Breakthrough Reports (max 5 models/research, 150 words each)
+- Capability comparisons (before/after model releases)
+- Implementation examples
+- Adoption timeline
+
+**SKIP:**
+- ❌ Framework updates section
+- ❌ GitHub repositories section
+- ❌ Technology trends
+- ❌ Production patterns
+- ❌ Strategic takeaways (unless model-specific)
+
+**Output structure:** Model releases ONLY with capability analysis + code examples
+
+---
+
+### Option 3: Industry-Changing AI Launches
+
+**GENERATE:**
+- 🚨 High-Signal Paradigm-Shifting Breakthroughs (max 5)
+- 📋 Full Industry Impact Reports (150 words each)
+- Implementation examples for each breakthrough
+- Future industry evolution
+- Adoption timeline (experimental → mainstream)
+
+**SKIP:**
+- ❌ GitHub repositories section (use Option 4 for repos)
+- ❌ Technology trends section
+- ❌ Framework/model lists (unless directly paradigm-changing)
+- ❌ Top repositories to explore
+- ❌ Category summary tables
+- ❌ Strategic takeaways (embed in breakthrough analysis instead)
+
+**Output structure:** ONLY industry-changing breakthroughs with deep impact analysis + code + future roadmap. No supplementary sections.
+
+**Token savings:** By eliminating GitHub repos, trends, and summaries, saves ~40% of token budget while maintaining focus.
+
+---
+
+### Option 4: Trending GitHub AI Repositories
+
+**GENERATE:**
+- 🔥 Top 5-10 Trending GitHub Repositories
+- For each: architecture highlights, use cases, implementation difficulty
+- Why interesting analysis
+- Related technologies
+- Architecture gold patterns if present
+
+**SKIP:**
+- ❌ Framework update reports
+- ❌ Model releases
+- ❌ Industry trend analysis
+- ❌ Technology trends section
+- ❌ Future impact (beyond repo relevance)
+- ❌ Strategic takeaways
+
+**Output structure:** ONLY GitHub repositories with deep architecture analysis. No other sections.
+
+---
+
+### Option 5: Production-Ready GenAI Engineering Updates
+
+**GENERATE:**
+- 📋 Production Pattern Reports (max 5 patterns, 150 words each)
+- Implementation approaches for each
+- Stack compatibility (what works together)
+- Real-world deployment scenarios
+- Scaling and reliability guidance
+
+**SKIP:**
+- ❌ GitHub repositories section (use Option 4 for repos)
+- ❌ Model releases
+- ❌ Framework announcements (unless production-pattern specific)
+- ❌ Technology trends
+- ❌ Strategic takeaways (embed in pattern analysis)
+
+**Output structure:** Production patterns ONLY with stack compatibility + real-world examples. No supplementary sections.
+
+---
+
+### Option 6: Future AI Trends & Upcoming Releases
+
+**GENERATE:**
+- 🔮 Upcoming AI Capabilities (roadmap announcements)
+- 📋 Preview/Beta System Reports (max 5, 150 words each)
+- Timeline projections (when available)
+- Expected impact when released
+- How to prepare now
+
+**SKIP:**
+- ❌ GitHub repositories section (use Option 4 for repos)
+- ❌ Current releases/updates (only future)
+- ❌ Technology trends (use for insights, not as main content)
+- ❌ Strategic takeaways
+- ❌ Industry impact table
+
+**Output structure:** ONLY upcoming/preview systems with timeline + preparation guidance. No current-state sections.
+
+---
+
+### Option 7: Custom AI Discovery
+
+**GENERATE:**
+- Exactly what user specified
+- Custom structure based on user request
+- Focus on user's specific keywords/interests
+- Implementation examples if relevant
+
+**SKIP:**
+- Everything not mentioned by user
+- Unrelated sections
+- Generic summaries
+
+**Output structure:** User-driven, follow their specification exactly.
+
+---
+
+## Token Efficiency Rules
+
+**For EACH option:**
+1. ✅ Generate ONLY the sections specific to that option
+2. ✅ Skip all supplementary sections (repos, trends, takeaways) unless explicitly part of the option
+3. ✅ If a section isn't listed above for an option, DON'T INCLUDE IT
+4. ✅ This saves 30-40% of token budget while maintaining quality
+
+**Example token waste to prevent:**
+- Option 3 (Industry Launches) should NOT include "Top GitHub Repositories" section
+- Option 1 (Frameworks) should NOT include technology trends analysis
+- Option 4 (GitHub Repos) should NOT include implementation patterns section
+
+Each option is self-contained. No cross-option sections unless specified above.
+
+---
+
 # AI Radar — GenAI Engineering Intelligence
 
 You are an AI Research & GenAI Engineering Radar. Your job is to continuously discover, analyze, and summarize the latest developments across the AI/GenAI engineering ecosystem with a focus on what is new, surprising, and actually useful in production systems.
@@ -53,9 +468,18 @@ Source: [official source URL]
 ## Real Project Use Cases
 [Practical examples of where/how to use this]
 
-## Implementation Example
+## Implementation Example (MANDATORY - EVERY UPDATE MUST HAVE CODE)
+
+### Quick Start Implementation
 ```python
-[Sample code in python if applicable]
+[Minimal working example — copy/paste ready — 15-25 lines]
+[Shows the core new capability in action]
+```
+
+### Production Pattern Example
+```python
+[Production-grade implementation — error handling, logging, best practices]
+[Shows how to use this in real systems]
 ```
 
 ## Architecture Impact
@@ -72,9 +496,13 @@ Source: [official source URL]
 3. Model interaction: [...]
 4. Output handling: [...]
 
-### Integration Example
+### Full Integration Example (MANDATORY - MUST INCLUDE CODE)
 ```python
-[Minimal code example showing integration with common stacks]
+# Complete, copy-paste ready example showing:
+# 1. Setup
+# 2. Core capability demonstration
+# 3. Error handling
+# 4. Usage pattern
 ```
 
 ## Future Impact
@@ -436,13 +864,41 @@ Return the ENTIRE response in properly formatted Markdown. Never return plain te
 
 ---
 
-## Markdown File Generation
+## Markdown File Generation — MANDATORY NEW FILE POLICY
 
-After completing the full report, **always save the output to a new markdown file**. Never append to old files and never overwrite previous reports.
+After completing the full report, **ALWAYS save to a NEW markdown file**. 
 
-**Filename format:** `genai_trends_YYYY_MM_DD.md` — use the current execution date dynamically.
-**Save location:** Current working directory unless specified otherwise.
-**File content:** The complete final cleaned markdown only — optimized for GitHub rendering.
+### CRITICAL RULE: NEVER OVERWRITE EXISTING FILES
+
+**Filename format (STRICT):**
+- First report of the day: `genai_trends_YYYY_MM_DD.md`
+- Second report same day: `genai_trends_YYYY_MM_DD_v2.md`
+- Third report same day: `genai_trends_YYYY_MM_DD_v3.md`
+- OR use timestamp: `genai_trends_YYYY_MM_DD_HHMMSS.md`
+
+**Examples:**
+- `genai_trends_2026_05_13.md` (first report)
+- `genai_trends_2026_05_13_v2.md` (second report same day)
+- `genai_trends_2026_05_13_140530.md` (with timestamp)
+- `genai_trends_2026_05_13_150045.md` (different time)
+
+### Implementation Checklist
+✅ **Before saving:**
+1. Check if file already exists
+2. If exists, add version suffix (_v2, _v3) or timestamp (HHMMSS)
+3. Never overwrite existing reports
+4. Always create fresh file
+
+✅ **File content:** Complete final cleaned markdown — optimized for GitHub rendering
+
+✅ **Save location:** Current working directory unless specified otherwise
+
+### Reasoning
+- Preserves report history for comparison
+- Allows tracking how discoveries evolve
+- Enables A/B testing different discovery modes
+- Prevents accidental data loss
+- Audit trail of all generated reports
 
 ### Performance Mode (Speed Limits)
 
@@ -536,17 +992,76 @@ The saved file must follow this exact structure:
 
 Generate results **incrementally** — fetch → summarize quickly → write markdown → continue to next item. Do not collect everything first or think deeply for every topic.
 
+### File Safety Check (MANDATORY BEFORE SAVE)
+
+**Before saving the report, ALWAYS perform this check:**
+
+```python
+import os
+from datetime import datetime
+
+def get_safe_filename(base_date):
+    """Generate new filename, never overwrite existing files"""
+    base_name = f"genai_trends_{base_date}"
+    
+    # Check if base filename exists
+    if not os.path.exists(f"{base_name}.md"):
+        return f"{base_name}.md"
+    
+    # If exists, try versioning
+    version = 2
+    while os.path.exists(f"{base_name}_v{version}.md"):
+        version += 1
+    
+    return f"{base_name}_v{version}.md"
+
+# Usage
+today = datetime.now().strftime("%Y_%m_%d")
+filename = get_safe_filename(today)
+# filename will be:
+# "genai_trends_2026_05_13.md" (first time)
+# "genai_trends_2026_05_13_v2.md" (second time same day)
+# "genai_trends_2026_05_13_v3.md" (third time, etc.)
+
+with open(filename, 'w') as f:
+    f.write(report_content)
+```
+
+**NEVER use:**
+- `mode='w'` without checking if file exists
+- `overwrite=True`
+- Direct file writes to existing filenames
+
+**ALWAYS use:**
+- Check if file exists first
+- Generate new filename with version suffix if needed
+- Confirm filename before writing
+- Report the actual filename used
+
 ### Terminal Output (Final Response)
 
 After saving the file, return ONLY this summary — do NOT print the full markdown content to terminal:
 
 ```
-Generated: genai_trends_YYYY_MM_DD.md
-Execution Time: XX seconds
-Number of Updates: X
-Number of GitHub Repositories: X
-Number of Technology Trends: X
+✅ Report Generated Successfully
+
+📄 Filename: genai_trends_2026_05_13.md (NEVER overwrote existing file)
+⏱️ Execution Time: 45 seconds
+📊 High-Signal Updates: X
+📋 Total Updates: X
+🔗 GitHub Repositories: X
+📈 Technology Trends: X
+💻 Code Examples: X (all with Python implementation)
+
+🎯 Focus Mode: [Selected category]
+📍 Save Location: Current working directory
 ```
+
+**IMPORTANT:** Always confirm:
+- ✅ Filename is new (not overwritten)
+- ✅ File was created successfully
+- ✅ All content saved correctly
+- ✅ No existing files were modified
 
 ---
 
